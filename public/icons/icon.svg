@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#161616" />
+      <stop offset="50%" stop-color="#111111" />
+      <stop offset="100%" stop-color="#080808" />
+    </linearGradient>
+
+    <linearGradient id="innerGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2d5a27" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#0f220d" stop-opacity="0.1" />
+    </linearGradient>
+
+    <linearGradient id="goldLuster" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe6a3" />
+      <stop offset="40%" stop-color="#ffd700" />
+      <stop offset="70%" stop-color="#c4a77d" />
+      <stop offset="100%" stop-color="#8a6730" />
+    </linearGradient>
+
+    <linearGradient id="arrowShaft" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c4a77d" />
+      <stop offset="50%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f5f0e8" />
+    </linearGradient>
+
+    <filter id="bullseyeGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <!-- Base Icon Background (Squircle with 112px radius) -->
+  <rect width="512" height="512" rx="116" fill="url(#iconBg)" />
+  <rect x="12" y="12" width="488" height="488" rx="104" fill="none" stroke="#c4a77d" stroke-opacity="0.25" stroke-width="2.5" />
+  <rect x="24" y="24" width="464" height="464" rx="94" fill="url(#innerGlow)" />
+
+  <!-- Archery Concentric Target Rings -->
+  <g opacity="0.85">
+    <circle cx="256" cy="256" r="180" stroke="#c4a77d" stroke-opacity="0.12" stroke-width="2.5" fill="none" />
+    <circle cx="256" cy="256" r="135" stroke="#c4a77d" stroke-opacity="0.22" stroke-width="3" fill="none" />
+    <circle cx="256" cy="256" r="90" stroke="#ffd700" stroke-opacity="0.35" stroke-width="3.5" fill="none" />
+    <circle cx="256" cy="256" r="45" stroke="#ffd700" stroke-opacity="0.6" stroke-width="4" fill="rgba(255, 215, 0, 0.08)" />
+
+    <!-- Center Bullseye / X-Ring -->
+    <circle cx="256" cy="256" r="22" fill="url(#goldLuster)" filter="url(#bullseyeGlow)" />
+    <!-- Fine Crosshairs -->
+    <line x1="256" y1="60" x2="256" y2="452" stroke="#c4a77d" stroke-opacity="0.1" stroke-width="1.5" />
+    <line x1="60" y1="256" x2="452" y2="256" stroke="#c4a77d" stroke-opacity="0.1" stroke-width="1.5" />
+  </g>
+
+  <!-- Traditional Horse Bow Silhouette (Recurved Arc) -->
+  <g filter="url(#cardShadow)">
+    <path d="M 148 385 C 90 280, 110 185, 215 110 C 220 106, 226 110, 223 117 C 130 195, 115 270, 168 375 C 172 383, 158 393, 148 385 Z" fill="url(#goldLuster)" />
+    <!-- String -->
+    <line x1="220" y1="114" x2="154" y2="380" stroke="#f5f0e8" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="6,4" />
+  </g>
+
+  <!-- Dynamic Flying Arrow (Piercing Through Center to Top-Right) -->
+  <g filter="url(#cardShadow)">
+    <!-- Arrow Shaft with Gradient -->
+    <line x1="120" y1="392" x2="380" y2="132" stroke="url(#arrowShaft)" stroke-width="9" stroke-linecap="round" />
+
+    <!-- Broadhead Arrow Head -->
+    <path d="M 400 112 L 345 130 L 382 167 Z" fill="url(#goldLuster)" />
+    <polygon points="400,112 375,148 364,137" fill="#ffffff" fill-opacity="0.6" />
+
+    <!-- Traditional Fletching (Turkey Feathers) -->
+    <!-- Feather 1 -->
+    <path d="M 125 387 L 95 417 M 140 372 L 110 402 M 155 357 L 125 387" stroke="url(#goldLuster)" stroke-width="5" stroke-linecap="round" />
+    <!-- Feather 2 (Opposite) -->
+    <path d="M 125 387 L 145 425 M 140 372 L 160 410 M 155 357 L 175 395" stroke="#c4a77d" stroke-width="4.5" stroke-linecap="round" stroke-opacity="0.9" />
+
+    <!-- Arrow Nock -->
+    <circle cx="114" cy="398" r="5" fill="url(#goldLuster)" />
+  </g>
+</svg>

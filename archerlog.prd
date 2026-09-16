@@ -1,0 +1,2222 @@
+# ARROWLOG v1
+
+## Archery Session & Score Tracker
+
+**Version:** 1.0
+**Status:** MVP / Development Ready
+**Platform:** Mobile-first Web App / PWA
+**Primary Market:** Archery communities in Malaysia
+**Initial Use Case:** Traditional / Horse Bow community sessions in Alor Setar
+
+---
+
+# 1. Product Overview
+
+ARROWLOG is a mobile-first Progressive Web App (PWA) designed to simplify archery session scoring, eliminate manual score calculations, provide live leaderboards, maintain individual shooting history, and generate shareable result cards.
+
+The initial target users are small to medium-sized archery communities that currently record scores manually and later transfer final scores into AI/design tools to create result posters.
+
+ARROWLOG moves the process into one system:
+
+```text
+Create Session
+      ↓
+Generate QR
+      ↓
+Archer Joins
+      ↓
+Enter Arrow Scores
+      ↓
+Automatic Calculation
+      ↓
+Live Leaderboard
+      ↓
+Session Results
+      ↓
+Shareable Result Card
+```
+
+---
+
+# 2. Problem Statement
+
+Current community archery sessions commonly rely on:
+
+* Paper score sheets
+* Manual calculations
+* WhatsApp messages
+* Manual ranking
+* Spreadsheet entry
+* AI/design tools for final result posters
+
+This creates several problems:
+
+1. Score calculation takes time.
+2. Manual calculation can cause errors.
+3. Organizers must consolidate scores manually.
+4. Participants cannot easily view their historical performance.
+5. Leaderboards are not immediately available.
+6. Result posters require additional manual work.
+7. Historical shooting data is difficult to maintain.
+
+ARROWLOG solves this by creating a single workflow from score entry to result sharing.
+
+---
+
+# 3. Product Vision
+
+> **Make every archery session easy to record, easy to understand, and worth remembering.**
+
+ARROWLOG should feel like a lightweight digital scorebook rather than complicated tournament software.
+
+The product should prioritize:
+
+* Speed
+* Simplicity
+* Accuracy
+* Mobile usability
+* Community interaction
+* Shareability
+
+---
+
+# 4. Goals
+
+## 4.1 Primary Goals
+
+ARROWLOG v1 must:
+
+* Allow organizers to create shooting sessions.
+* Allow archers to join sessions using QR codes.
+* Allow archers to record individual arrow scores.
+* Automatically calculate scores.
+* Automatically rank participants.
+* Display a live leaderboard.
+* Store session history.
+* Generate shareable result cards.
+* Work effectively on mobile devices.
+* Support traditional / horse bow sessions.
+
+---
+
+# 5. Non-Goals
+
+The following are NOT required for v1:
+
+* Native iOS application
+* Native Android application
+* Payment system
+* Tournament registration/payment
+* Complex federation management
+* Official competition certification
+* Automated target image recognition
+* AI arrow detection
+* Social network features
+* Public global ranking
+* Advanced tournament brackets
+* Hardware integration
+
+These may be considered in future versions.
+
+---
+
+# 6. Target Users
+
+## 6.1 Archer
+
+A community member participating in a shooting session.
+
+Typical needs:
+
+* Join quickly
+* Enter scores quickly
+* See current score
+* See ranking
+* Review previous sessions
+* Share achievements
+
+---
+
+## 6.2 Session Organizer
+
+Community member responsible for running a shooting session.
+
+Typical needs:
+
+* Create session
+* Configure scoring
+* Generate QR code
+* Monitor participants
+* Correct mistakes
+* End session
+* View results
+* Generate result cards
+
+---
+
+## 6.3 Community Admin
+
+Optional higher-level role responsible for the community.
+
+Responsibilities:
+
+* Manage community profile
+* Manage members
+* View historical sessions
+* Manage session organizers
+
+Community administration can remain minimal in v1.
+
+---
+
+# 7. Core User Journey
+
+## 7.1 Organizer Journey
+
+```text
+Login
+ ↓
+Dashboard
+ ↓
+Create Session
+ ↓
+Configure Session
+ ↓
+Publish Session
+ ↓
+Generate QR Code
+ ↓
+Display QR at Range
+ ↓
+Monitor Participants
+ ↓
+Monitor Scores
+ ↓
+End Session
+ ↓
+View Results
+ ↓
+Generate Result Cards
+```
+
+---
+
+## 7.2 Archer Journey
+
+```text
+Scan QR
+ ↓
+Session Preview
+ ↓
+Enter / Select Name
+ ↓
+Select Bow Type
+ ↓
+Join
+ ↓
+Score Entry
+ ↓
+Submit End
+ ↓
+Continue Shooting
+ ↓
+View Current Score
+ ↓
+View Leaderboard
+ ↓
+Session Complete
+ ↓
+View Result
+ ↓
+Share Result Card
+```
+
+---
+
+# 8. MVP Features
+
+## 8.1 Authentication
+
+### Organizer
+
+Organizer login is required.
+
+Supported:
+
+* Email/password
+* Supabase Auth
+
+Future:
+
+* Google login
+* Apple login
+
+### Archer
+
+For v1, archers should be able to join a session using:
+
+* QR code
+* Session code
+* Display name
+
+An account should not be mandatory for casual participation.
+
+However, an optional persistent profile should be supported so returning archers can maintain history.
+
+---
+
+# 9. Community
+
+A community represents an archery group.
+
+Example:
+
+```text
+Alor Setar Archery Community
+```
+
+Community fields:
+
+```text
+id
+name
+description
+location
+logo_url
+created_at
+```
+
+---
+
+# 10. Archer Profile
+
+## Required Fields
+
+```text
+id
+display_name
+avatar_url
+bow_type
+created_at
+```
+
+## Supported Bow Types
+
+Initial options:
+
+* Horse Bow
+* Traditional Bow
+* Recurve
+* Longbow
+* Compound
+* Other
+
+The list must be configurable in future.
+
+---
+
+# 11. Session Management
+
+## 11.1 Create Session
+
+Organizer can create:
+
+* Session name
+* Date
+* Start time
+* Venue
+* Community
+* Bow type
+* Distance
+* Number of ends
+* Arrows per end
+* Scoring format
+
+Example:
+
+```text
+Wednesday Night Shoot
+
+Venue:
+Alor Setar
+
+Bow:
+Horse Bow
+
+Distance:
+10m
+
+Ends:
+6
+
+Arrows / End:
+6
+
+Maximum Score:
+360
+```
+
+---
+
+# 12. Session Status
+
+A session has one of the following statuses:
+
+```text
+DRAFT
+OPEN
+LIVE
+COMPLETED
+CANCELLED
+```
+
+### DRAFT
+
+Session is being configured.
+
+### OPEN
+
+Participants can join.
+
+### LIVE
+
+Scoring is active.
+
+### COMPLETED
+
+Session is finished and results are locked.
+
+### CANCELLED
+
+Session has been cancelled.
+
+---
+
+# 13. Session QR Code
+
+Each session must have a unique join URL.
+
+Example:
+
+```text
+https://arrowlog.app/join/ABC123
+```
+
+The organizer can display the QR code at the shooting range.
+
+QR should encode the session join URL.
+
+The QR screen should contain:
+
+```text
+🏹 ARROWLOG
+
+Wednesday Night Shoot
+
+HORSE BOW
+6 Ends · 36 Arrows
+
+[ QR CODE ]
+
+Scan to Join
+```
+
+---
+
+# 14. Joining a Session
+
+After scanning:
+
+```text
+Wednesday Night Shoot
+
+Alor Setar
+Horse Bow
+6 Ends · 36 Arrows
+
+Name
+[ Ajwad ]
+
+Bow Type
+[ Horse Bow ▼ ]
+
+[ JOIN SESSION ]
+```
+
+After joining:
+
+```text
+You're in! 🏹
+
+Wait for the organizer
+to start the session.
+```
+
+---
+
+# 15. Scoring System
+
+ARROWLOG v1 must support configurable numeric scoring.
+
+Default:
+
+```text
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+0
+```
+
+Optional:
+
+```text
+X
+M
+```
+
+Where:
+
+* `X` = X-ring / highest scoring zone
+* `M` = Miss
+
+Internally:
+
+```text
+X = configurable numeric value
+M = 0
+```
+
+For default implementation:
+
+```text
+X = 10
+M = 0
+```
+
+The system must store both:
+
+```text
+display_value
+numeric_value
+```
+
+This allows future scoring formats.
+
+---
+
+# 16. Score Entry UX
+
+Score entry must be optimized for one-handed mobile use.
+
+Example:
+
+```text
+AJWAD
+Horse Bow
+
+END 3 / 6
+
+┌────┬────┬────┐
+│ 10 │ 9  │ 8  │
+├────┼────┼────┤
+│ 7  │ 6  │ 5  │
+├────┼────┼────┤
+│ 4  │ 3  │ 2  │
+├────┼────┼────┤
+│ 1  │ 0  │ X  │
+└────┴────┴────┘
+
+Arrows:
+● ● ● ● ● ●
+
+Current:
+49
+
+[ SUBMIT END ]
+```
+
+---
+
+# 17. Score Entry Rules
+
+The system must enforce:
+
+```text
+number of arrows = configured arrows per end
+```
+
+Example:
+
+If session has:
+
+```text
+6 arrows / end
+```
+
+The archer cannot submit until exactly 6 scores have been entered.
+
+Exception:
+
+Organizer can manually override the end.
+
+---
+
+# 18. Score Editing
+
+An organizer must be able to edit:
+
+* Individual arrow score
+* End score
+* Participant
+
+All edits must trigger recalculation.
+
+Optional audit fields:
+
+```text
+edited_at
+edited_by
+edit_reason
+```
+
+---
+
+# 19. Score Calculation
+
+## End Score
+
+```text
+end_score =
+SUM(all arrow numeric values)
+```
+
+## Total Score
+
+```text
+total_score =
+SUM(all completed end scores)
+```
+
+## Average
+
+```text
+average =
+total_score / total_arrows
+```
+
+Round to 2 decimal places.
+
+Example:
+
+```text
+287 / 36 = 7.97
+```
+
+---
+
+# 20. Maximum Score
+
+```text
+maximum_score =
+number_of_ends × arrows_per_end × maximum_arrow_score
+```
+
+Example:
+
+```text
+6 × 6 × 10
+= 360
+```
+
+---
+
+# 21. Progress
+
+Display:
+
+```text
+End 4 / 6
+```
+
+And:
+
+```text
+24 / 36 arrows
+```
+
+Progress bar should update automatically.
+
+---
+
+# 22. Live Leaderboard
+
+Leaderboard must display:
+
+```text
+🏆 LIVE LEADERBOARD
+
+1  Amir        312
+2  Ajwad       287
+3  Hakim       274
+4  Faris       268
+5  Syafiq      251
+```
+
+Additional information:
+
+* Rank
+* Archer name
+* Score
+* Completed arrows
+* Average
+
+The leaderboard should automatically update after a score submission.
+
+---
+
+# 23. Ranking Logic
+
+Primary ranking:
+
+```text
+total_score DESC
+```
+
+Tie-breaker v1:
+
+```text
+1. Total score
+2. Number of X
+3. Number of 10s
+4. Number of 9s
+5. Shared rank if still tied
+```
+
+If X/10 tie-breaker is not applicable to the selected scoring format:
+
+```text
+total_score DESC
+```
+
+The ranking algorithm must be isolated into a reusable service.
+
+---
+
+# 24. Personal Score Screen
+
+Example:
+
+```text
+AJWAD
+
+287 POINTS
+
+━━━━━━━━━━━━
+
+36 Arrows
+Average 7.97
+Horse Bow
+
+END SCORES
+
+01   45
+02   49
+03   43
+04   51
+05   47
+06   52
+```
+
+Bottom:
+
+```text
+[ VIEW LEADERBOARD ]
+
+[ SHARE RESULT ]
+```
+
+---
+
+# 25. Session Results
+
+After session completion:
+
+```text
+SESSION RESULTS
+
+Wednesday Night Shoot
+
+36 Arrows
+6 Ends
+
+🥇 Amir       312
+🥈 Ajwad      287
+🥉 Hakim      274
+```
+
+Organizer actions:
+
+```text
+[ GENERATE RESULTS ]
+
+[ SHARE ]
+
+[ CLOSE SESSION ]
+```
+
+---
+
+# 26. Result Card
+
+Every completed session should generate a shareable visual result.
+
+Recommended formats:
+
+### Square
+
+```text
+1080 × 1080
+```
+
+### Instagram Story
+
+```text
+1080 × 1920
+```
+
+v1 may implement square first.
+
+---
+
+# 27. Individual Result Card
+
+Example content:
+
+```text
+ARROWLOG
+
+WEDNESDAY NIGHT SHOOT
+
+AJWAD
+
+287
+POINTS
+
+🥈 2ND PLACE
+
+36 ARROWS
+AVG 7.97
+
+HORSE BOW
+
+ALOR SETAR
+ARCHERY COMMUNITY
+```
+
+The design should feel:
+
+* Premium
+* Sporty
+* Traditional
+* Clean
+* Social-media friendly
+
+Avoid excessive UI elements.
+
+---
+
+# 28. Session Result Poster
+
+Optional organizer poster:
+
+```text
+WEDNESDAY NIGHT SHOOT
+
+🏆 FINAL RESULTS
+
+1  AMIR       312
+2  AJWAD      287
+3  HAKIM      274
+4  FARIS      268
+5  SYAFIQ     251
+
+HORSE BOW
+36 ARROWS
+
+ARROWLOG
+```
+
+---
+
+# 29. Poster Generation Architecture
+
+Poster generation must be separated from scoring logic.
+
+```text
+Score Database
+      ↓
+Result JSON
+      ↓
+Poster Template
+      ↓
+Rendered Image
+      ↓
+Storage
+      ↓
+Share / Download
+```
+
+The poster renderer must never calculate the score independently.
+
+The database is the source of truth.
+
+---
+
+# 30. AI Integration
+
+AI is optional in v1.
+
+AI should be used for:
+
+* Poster artwork generation
+* Caption generation
+* Session summary
+* Social media copy
+
+AI must NOT be responsible for:
+
+* Calculating scores
+* Ranking archers
+* Determining official results
+
+All numerical results must come from application logic.
+
+---
+
+# 31. Future AI Target Recognition
+
+Future feature:
+
+```text
+Target Photo
+     ↓
+Computer Vision
+     ↓
+Detect Arrows
+     ↓
+Estimate Scores
+     ↓
+User Confirmation
+     ↓
+Save Scores
+```
+
+Important:
+
+AI-generated scores must require human confirmation before becoming official scores.
+
+This feature is **Phase 2+**, not v1.
+
+---
+
+# 32. Dashboard
+
+Organizer dashboard:
+
+```text
+ARROWLOG
+
+Good evening 👋
+
+[ + CREATE SESSION ]
+
+ACTIVE SESSION
+
+Wednesday Night Shoot
+LIVE
+12 Archers
+━━━━━━━━━━━━
+
+RECENT SESSIONS
+
+Saturday Shoot
+18 Archers
+Completed
+
+Thursday Shoot
+11 Archers
+Completed
+```
+
+---
+
+# 33. Archer Dashboard
+
+```text
+MY ARROWLOG
+
+AJWAD
+
+Best Score
+321
+
+Sessions
+24
+
+Arrows
+864
+
+Average
+276.4
+
+━━━━━━━━━━━━
+
+RECENT SESSIONS
+
+Wednesday Night Shoot
+287 · 2nd
+
+Saturday Shoot
+301 · 1st
+
+Thursday Shoot
+276 · 3rd
+```
+
+---
+
+# 34. Navigation
+
+Mobile bottom navigation:
+
+```text
+Home
+Sessions
+Leaderboard
+Profile
+```
+
+Organizer:
+
+```text
+Home
+Sessions
+Create
+Results
+Profile
+```
+
+Avoid excessive navigation in v1.
+
+---
+
+# 35. UI Design Direction
+
+## Visual Identity
+
+ARROWLOG should visually combine:
+
+* Traditional archery
+* Modern sports application
+* Natural materials
+* Premium competition graphics
+
+Suggested visual language:
+
+* Dark charcoal
+* Warm sand
+* Forest green
+* Off-white
+* Subtle bronze accents
+
+Avoid overly futuristic/cyberpunk styling.
+
+---
+
+# 36. Typography
+
+Use a modern sans-serif font.
+
+Recommended:
+
+* Inter
+* Geist
+* Plus Jakarta Sans
+
+Headings may use a slightly condensed display font for result posters.
+
+---
+
+# 37. UX Principles
+
+## Rule 1 — Shoot first, tap less
+
+Score entry should require minimal interaction.
+
+## Rule 2 — Big touch targets
+
+Minimum recommended:
+
+```text
+44 × 44 px
+```
+
+Prefer:
+
+```text
+52–64 px
+```
+
+for score buttons.
+
+## Rule 3 — Immediate feedback
+
+After submitting:
+
+```text
+END 3 SAVED ✓
+49 POINTS
+```
+
+## Rule 4 — Never lose score
+
+Scores should persist immediately after submission.
+
+## Rule 5 — Offline-friendly
+
+The scoring interface should tolerate temporary network interruptions.
+
+---
+
+# 38. PWA Requirements
+
+ARROWLOG must support:
+
+* Install to Home Screen
+* Mobile viewport
+* Standalone mode
+* App icon
+* Splash screen
+* Service worker
+* Basic offline caching
+
+Offline scoring architecture should be considered during implementation.
+
+Minimum v1:
+
+```text
+Score Entry
+↓
+Local Queue
+↓
+Network Available
+↓
+Sync
+```
+
+If full offline synchronization is too complex for MVP, implement resilient local draft storage first.
+
+---
+
+# 39. Recommended Tech Stack
+
+## Frontend
+
+```text
+Next.js
+TypeScript
+Tailwind CSS
+PWA
+```
+
+## Backend
+
+```text
+Supabase
+```
+
+Components:
+
+```text
+Supabase Auth
+Supabase PostgreSQL
+Supabase Storage
+Supabase Realtime
+```
+
+## Hosting
+
+Recommended:
+
+```text
+Vercel
+```
+
+Alternative:
+
+Any Node-compatible hosting environment.
+
+---
+
+# 40. Database Schema
+
+## communities
+
+```sql
+create table communities (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  description text,
+  location text,
+  logo_url text,
+  created_at timestamptz default now()
+);
+```
+
+---
+
+## profiles
+
+```sql
+create table profiles (
+  id uuid primary key references auth.users(id),
+  display_name text not null,
+  avatar_url text,
+  bow_type text,
+  created_at timestamptz default now()
+);
+```
+
+---
+
+## community_members
+
+```sql
+create table community_members (
+  id uuid primary key default gen_random_uuid(),
+  community_id uuid references communities(id) on delete cascade,
+  user_id uuid references profiles(id) on delete cascade,
+  role text default 'member',
+  created_at timestamptz default now(),
+
+  unique(community_id, user_id)
+);
+```
+
+Roles:
+
+```text
+member
+organizer
+admin
+```
+
+---
+
+## sessions
+
+```sql
+create table sessions (
+  id uuid primary key default gen_random_uuid(),
+
+  community_id uuid references communities(id),
+
+  name text not null,
+  venue text,
+  session_date date not null,
+  start_time time,
+
+  bow_type text,
+  distance_m numeric,
+
+  ends_count integer not null,
+  arrows_per_end integer not null,
+
+  maximum_arrow_score integer default 10,
+
+  status text default 'draft',
+
+  join_code text unique not null,
+
+  created_by uuid references profiles(id),
+
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+```
+
+---
+
+## session_archers
+
+```sql
+create table session_archers (
+  id uuid primary key default gen_random_uuid(),
+
+  session_id uuid references sessions(id) on delete cascade,
+
+  user_id uuid references profiles(id),
+
+  display_name text not null,
+  bow_type text,
+
+  joined_at timestamptz default now(),
+
+  unique(session_id, user_id)
+);
+```
+
+For guest participants, `user_id` may be nullable.
+
+---
+
+## ends
+
+```sql
+create table ends (
+  id uuid primary key default gen_random_uuid(),
+
+  session_archer_id uuid references session_archers(id) on delete cascade,
+
+  end_number integer not null,
+
+  total_score integer default 0,
+
+  submitted_at timestamptz,
+
+  unique(session_archer_id, end_number)
+);
+```
+
+---
+
+## arrows
+
+```sql
+create table arrows (
+  id uuid primary key default gen_random_uuid(),
+
+  end_id uuid references ends(id) on delete cascade,
+
+  arrow_number integer not null,
+
+  display_value text not null,
+
+  numeric_value integer not null,
+
+  created_at timestamptz default now(),
+
+  unique(end_id, arrow_number)
+);
+```
+
+---
+
+## results
+
+Results can be calculated dynamically, but a snapshot table can be useful after session completion.
+
+```sql
+create table results (
+  id uuid primary key default gen_random_uuid(),
+
+  session_id uuid references sessions(id) on delete cascade,
+
+  session_archer_id uuid references session_archers(id),
+
+  total_score integer not null,
+  total_arrows integer not null,
+
+  average_score numeric(6,2),
+
+  x_count integer default 0,
+  ten_count integer default 0,
+
+  rank integer,
+
+  created_at timestamptz default now()
+);
+```
+
+---
+
+## posters
+
+```sql
+create table posters (
+  id uuid primary key default gen_random_uuid(),
+
+  session_id uuid references sessions(id) on delete cascade,
+
+  session_archer_id uuid references session_archers(id),
+
+  poster_type text not null,
+
+  template text,
+
+  image_url text,
+
+  created_at timestamptz default now()
+);
+```
+
+---
+
+# 41. Row Level Security
+
+Supabase RLS must be enabled.
+
+Basic principles:
+
+### Archer
+
+Can:
+
+* Read own profile
+* Read sessions they joined
+* Insert own scores
+* Read public leaderboard
+
+Cannot:
+
+* Modify another archer's scores
+* Modify session configuration
+
+### Organizer
+
+Can:
+
+* Create sessions
+* Modify own sessions
+* View participants
+* Edit participant scores
+* Complete sessions
+
+### Community Admin
+
+Can:
+
+* Manage community
+* Manage members
+* Manage sessions
+
+---
+
+# 42. API / Server Actions
+
+Recommended architecture:
+
+```text
+/app
+  /dashboard
+  /sessions
+  /join/[code]
+  /session/[id]
+  /results/[id]
+  /profile
+```
+
+Server actions / API:
+
+```text
+createSession()
+joinSession()
+startSession()
+submitEnd()
+updateArrowScore()
+getSessionLeaderboard()
+completeSession()
+generateResult()
+generatePoster()
+```
+
+---
+
+# 43. Score Submission
+
+Preferred operation:
+
+```text
+submitEnd(
+  sessionId,
+  sessionArcherId,
+  endNumber,
+  arrows[]
+)
+```
+
+Server must validate:
+
+1. Session exists.
+2. Session is active.
+3. Archer belongs to session.
+4. End number is valid.
+5. Arrow count is correct.
+6. Score values are valid.
+7. End has not already been submitted, unless editing is allowed.
+
+Then:
+
+```text
+INSERT END
+INSERT ARROWS
+CALCULATE TOTAL
+UPDATE RESULT
+```
+
+This operation should be transactional.
+
+---
+
+# 44. Realtime
+
+Use Supabase Realtime for:
+
+* Leaderboard updates
+* Participant joining
+* Score updates
+* Session status
+
+Example:
+
+```text
+Archer submits score
+       ↓
+Database updated
+       ↓
+Realtime event
+       ↓
+Leaderboard updates
+```
+
+---
+
+# 45. Error Handling
+
+Examples:
+
+### Network error
+
+```text
+Unable to sync score.
+
+Your score is saved locally.
+We'll retry automatically.
+```
+
+### Invalid score
+
+```text
+Invalid score.
+Please select a valid arrow score.
+```
+
+### Session closed
+
+```text
+This session has ended.
+Scores can no longer be submitted.
+```
+
+### Duplicate submission
+
+```text
+This end has already been submitted.
+```
+
+---
+
+# 46. Data Integrity
+
+Important rules:
+
+* Never calculate final scores on the client only.
+* Server/database is the source of truth.
+* Recalculate totals after every score change.
+* Store individual arrow scores.
+* Do not trust client-provided ranking.
+* Lock completed sessions.
+* Maintain edit history for organizer changes where practical.
+
+---
+
+# 47. Security
+
+Required:
+
+* Supabase RLS
+* Authenticated organizer actions
+* Server-side score validation
+* Rate limiting on join endpoints
+* Random session join codes
+* No sensitive personal information
+* Secure storage policies
+
+Guest archer data should remain minimal.
+
+---
+
+# 48. Accessibility
+
+The application should support:
+
+* Large touch targets
+* High contrast
+* Keyboard navigation where applicable
+* Screen reader labels
+* Clear error messages
+* Avoid relying on color alone
+
+Score buttons must display text/numbers clearly.
+
+---
+
+# 49. Responsive Design
+
+Primary target:
+
+```text
+Mobile: 360px+
+```
+
+Secondary:
+
+```text
+Tablet
+Desktop
+```
+
+Desktop organizer dashboard can use a wider layout.
+
+Archer score entry should remain optimized for mobile even on desktop.
+
+---
+
+# 50. Performance
+
+Targets:
+
+* Fast initial load
+* Minimal JavaScript where possible
+* Optimized images
+* Lazy-load poster previews
+* Use server-side rendering where appropriate
+* Avoid unnecessary realtime subscriptions
+
+Score submission should feel immediate.
+
+---
+
+# 51. Analytics
+
+Optional lightweight analytics:
+
+```text
+sessions_created
+sessions_completed
+archers_joined
+scores_submitted
+result_cards_generated
+```
+
+Do not collect unnecessary personal data.
+
+---
+
+# 52. MVP Screens
+
+## Public
+
+1. Landing Page
+2. Join Session
+3. Session Preview
+
+## Archer
+
+4. Archer Home
+5. Score Entry
+6. Current Score
+7. Live Leaderboard
+8. Session Result
+9. Profile
+10. History
+
+## Organizer
+
+11. Organizer Dashboard
+12. Create Session
+13. Session Management
+14. QR Screen
+15. Live Session
+16. Participant Management
+17. Score Editing
+18. Results
+19. Poster Generator
+
+---
+
+# 53. Landing Page
+
+Simple:
+
+```text
+🏹 ARROWLOG
+
+Track your shots.
+See your score.
+Share your session.
+
+[ CREATE SESSION ]
+
+[ JOIN SESSION ]
+```
+
+No complicated marketing page required for MVP.
+
+---
+
+# 54. Create Session UI
+
+Fields:
+
+```text
+Session Name
+Venue
+Date
+Time
+
+Bow Type
+Distance
+
+Ends
+Arrows / End
+
+Maximum Score
+
+[ CREATE SESSION ]
+```
+
+After creation:
+
+```text
+Session Created ✓
+
+[ SHOW QR ]
+
+[ START SESSION ]
+```
+
+---
+
+# 55. Session Control Panel
+
+Organizer:
+
+```text
+WEDNESDAY NIGHT SHOOT
+
+LIVE
+
+12 Archers
+36 Arrows / Archer
+
+━━━━━━━━━━━━
+
+[ QR CODE ]
+
+[ LEADERBOARD ]
+
+[ PARTICIPANTS ]
+
+[ END SESSION ]
+```
+
+---
+
+# 56. Participant Screen
+
+```text
+PARTICIPANTS
+
+12 Joined
+
+● Amir
+● Ajwad
+● Hakim
+● Faris
+...
+```
+
+Status:
+
+```text
+5 / 6 Ends
+```
+
+Organizer can identify participants who have not completed the current end.
+
+---
+
+# 57. Result Card Template System
+
+Templates should be data-driven.
+
+Example:
+
+```text
+template:
+"minimal-dark"
+```
+
+Future:
+
+```text
+traditional
+competition
+community
+cinematic
+minimal
+```
+
+Template data:
+
+```json
+{
+  "name": "Ajwad",
+  "score": 287,
+  "rank": 2,
+  "average": 7.97,
+  "arrows": 36,
+  "bow": "Horse Bow"
+}
+```
+
+---
+
+# 58. Sharing
+
+Result card actions:
+
+```text
+[ DOWNLOAD ]
+
+[ SHARE ]
+
+[ COPY RESULT ]
+```
+
+Web Share API should be used where supported.
+
+Fallback:
+
+Download image.
+
+---
+
+# 59. WhatsApp Sharing
+
+Generate share text:
+
+```text
+🏹 ARROWLOG RESULT
+
+Wednesday Night Shoot
+
+Ajwad
+287 Points
+🥈 2nd Place
+
+Horse Bow
+36 Arrows
+Average 7.97
+```
+
+The image can be shared through the device's native sharing mechanism.
+
+---
+
+# 60. Future Features
+
+## Phase 2
+
+### Personal Statistics
+
+* Score trends
+* Average
+* Best score
+* Best end
+* Arrow distribution
+* Monthly statistics
+
+### Community Statistics
+
+* Most sessions
+* Highest scores
+* Monthly leaderboard
+* Community records
+
+### Achievements
+
+Examples:
+
+```text
+🎯 First Bullseye
+🔥 Personal Best
+🏹 500 Arrows
+🏆 First Place
+```
+
+---
+
+# 61. Phase 3
+
+## AI Target Scanning
+
+Upload target image.
+
+AI detects:
+
+* Target face
+* Arrow locations
+* Approximate scoring rings
+
+User confirms.
+
+Then:
+
+```text
+SAVE SCORES
+```
+
+AI must never automatically finalize an official score without confirmation.
+
+---
+
+# 62. Phase 4
+
+## Tournament Mode
+
+Support:
+
+* Qualification
+* Multiple rounds
+* Categories
+* Age groups
+* Gender categories
+* Elimination
+* Finals
+* Official result export
+* Certificates
+
+This should be designed as a separate domain layer rather than overloading the casual session model.
+
+---
+
+# 63. Future Monetization
+
+Possible model:
+
+### Free
+
+* Personal scoring
+* Basic sessions
+* Basic leaderboard
+
+### Community
+
+* Unlimited sessions
+* Custom branding
+* Advanced statistics
+* Result templates
+* Community profile
+
+### Tournament
+
+* Tournament management
+* Registration
+* Categories
+* Brackets
+* Certificates
+* Advanced reporting
+
+Do not implement monetization in v1.
+
+---
+
+# 64. MVP Acceptance Criteria
+
+ARROWLOG v1 is considered complete when:
+
+### Session
+
+* [ ] Organizer can create a session.
+* [ ] Organizer can configure ends and arrows.
+* [ ] Session generates unique QR code.
+* [ ] Session can be opened and closed.
+
+### Archer
+
+* [ ] Archer can scan/join session.
+* [ ] Archer can enter name.
+* [ ] Archer can select bow type.
+* [ ] Archer can submit scores.
+
+### Scoring
+
+* [ ] Score validation works.
+* [ ] End total is automatically calculated.
+* [ ] Session total is automatically calculated.
+* [ ] Average is calculated.
+* [ ] Scores persist in database.
+* [ ] Organizer can edit scores.
+
+### Leaderboard
+
+* [ ] Leaderboard updates automatically.
+* [ ] Ranking is calculated server-side.
+* [ ] Ties are handled consistently.
+
+### Results
+
+* [ ] Completed session generates results.
+* [ ] Individual result card is generated.
+* [ ] Result card can be downloaded.
+* [ ] Result can be shared.
+
+### PWA
+
+* [ ] App works on mobile.
+* [ ] App can be installed.
+* [ ] App icon exists.
+* [ ] Basic offline resilience exists.
+
+---
+
+# 65. Definition of Done
+
+A feature is considered done only when:
+
+1. UI is implemented.
+2. Mobile layout is tested.
+3. Database operations work.
+4. RLS policies are verified.
+5. Validation exists.
+6. Error states exist.
+7. Loading states exist.
+8. Empty states exist.
+9. Data persists correctly.
+10. Feature works on a real mobile device.
+
+---
+
+# 66. Development Phases
+
+## Phase 1 — Foundation
+
+```text
+Project setup
+Supabase
+Database
+Auth
+PWA
+UI system
+```
+
+## Phase 2 — Sessions
+
+```text
+Create session
+Session configuration
+QR join
+Participant management
+```
+
+## Phase 3 — Scoring
+
+```text
+Score entry
+Arrow storage
+End calculation
+Total calculation
+Editing
+```
+
+## Phase 4 — Leaderboard
+
+```text
+Realtime
+Ranking
+Live leaderboard
+```
+
+## Phase 5 — Results
+
+```text
+Session completion
+Result snapshot
+Result cards
+Sharing
+```
+
+## Phase 6 — Polish
+
+```text
+Mobile UX
+Animations
+Offline resilience
+Error handling
+Performance
+```
+
+---
+
+# 67. Recommended Project Structure
+
+```text
+arrowlog/
+│
+├── app/
+│   ├── page.tsx
+│   │
+│   ├── dashboard/
+│   ├── sessions/
+│   ├── join/
+│   │   └── [code]/
+│   ├── session/
+│   │   └── [id]/
+│   ├── results/
+│   │   └── [id]/
+│   └── profile/
+│
+├── components/
+│   ├── ui/
+│   ├── scoring/
+│   ├── leaderboard/
+│   ├── session/
+│   └── result-card/
+│
+├── lib/
+│   ├── supabase/
+│   ├── scoring/
+│   ├── ranking/
+│   ├── sessions/
+│   └── poster/
+│
+├── hooks/
+│
+├── types/
+│
+├── public/
+│   ├── icons/
+│   └── manifest.webmanifest
+│
+└── supabase/
+    └── migrations/
+```
+
+---
+
+# 68. Core Domain Model
+
+```text
+Community
+   │
+   ├── Members
+   │
+   └── Sessions
+          │
+          ├── Session Archers
+          │       │
+          │       └── Ends
+          │              │
+          │              └── Arrows
+          │
+          └── Results
+                  │
+                  └── Posters
+```
+
+---
+
+# 69. Product Principle
+
+The central principle of ARROWLOG:
+
+> **The archer should spend more time shooting and less time calculating.**
+
+Every UX decision should support this.
+
+If a feature adds complexity without improving scoring, session management, community engagement, or result sharing, it should not be included in v1.
+
+---
+
+# 70. Future Product Direction
+
+ARROWLOG should eventually become a lightweight digital platform for archery communities.
+
+Potential ecosystem:
+
+```text
+ARROWLOG
+│
+├── Casual Sessions
+├── Training
+├── Community
+├── Personal Statistics
+├── Competitions
+├── Tournament Mode
+├── Certificates
+├── AI Target Scanning
+└── Social Results
+```
+
+The v1 architecture must therefore remain modular enough to support these features without rebuilding the scoring engine.
+
+---
+
+# 71. Final MVP Scope
+
+The first production version should focus on one simple experience:
+
+```text
+CREATE SESSION
+      ↓
+SCAN QR
+      ↓
+ENTER ARROW SCORES
+      ↓
+AUTO CALCULATE
+      ↓
+LIVE LEADERBOARD
+      ↓
+FINAL RESULTS
+      ↓
+SHARE RESULT CARD
+```
+
+Everything else is secondary.
+
+**ARROWLOG v1 = Digital Scorebook + Live Leaderboard + Shareable Results.**
+
+---
+
+# 72. Product Tagline
+
+Primary:
+
+> **Shoot. Score. Share.**
+
+Alternative:
+
+> **Your session. Your score. Your story.**
+
+Malay alternative:
+
+> **Panah. Kira. Kongsi.**
