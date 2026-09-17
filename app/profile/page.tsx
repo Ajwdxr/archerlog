@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import ProfileForm from './ProfileForm';
 import BottomNav from '@/components/ui/BottomNav';
 import Button from '@/components/ui/Button';
+import ProfileHelpSection from '@/components/ProfileHelpSection';
 import { ArrowLeft, User, LogIn, Trophy } from 'lucide-react';
 
 export default async function ProfilePage() {
@@ -58,6 +59,9 @@ export default async function ProfilePage() {
         email={user?.email}
         isLoggedIn={!!user}
       />
+
+      {/* Guide & PWA Install Section */}
+      <ProfileHelpSection />
 
       <BottomNav role={user ? 'organizer' : 'archer'} />
     </main>

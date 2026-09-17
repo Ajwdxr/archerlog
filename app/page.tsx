@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Target, Users, Share2, Zap, ChevronRight } from 'lucide-react';
+import HomeActions from '@/components/HomeActions';
 
 export default function HomePage() {
   return (
@@ -84,6 +85,9 @@ export default function HomePage() {
             JOIN SESSION
             <ChevronRight size={18} className="opacity-50" />
           </Link>
+
+          {/* Quick Guide & PWA Install */}
+          <HomeActions />
         </div>
 
         {/* Feature highlights */}
