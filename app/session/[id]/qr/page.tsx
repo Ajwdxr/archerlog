@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import QRDisplay from './QRDisplay';
 import { ArrowLeft } from 'lucide-react';
@@ -22,7 +23,12 @@ export default async function QRPage({ params }: Props) {
 
   const s = session as any;
 
-  const joinUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/join/${s.join_code}`;
+  // Resolve host from incoming request headers
+  const headersList = await headers();
+  const host = headersList.get('x-forwarded-host') || headersList.get('host') || 'localhost:3000';
+  const proto = headersList.get('x-forwarded-proto') || (host.startsWith('localhost') ? 'http' : 'https');
+  const baseOrigin = process.env.NEXT_PUBLIC_APP_URL || `${proto}://${host}`;
+  const joinUrl = `${baseOrigin}/join/${s.join_code}`;
   const totalArrows = s.ends_count * s.arrows_per_end;
 
   return (

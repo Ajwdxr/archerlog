@@ -3,10 +3,12 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import Badge from '@/components/ui/Badge';
 import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import SessionControls from './SessionControls';
-import type { SessionStatus } from '@/types/database';
+import ParticipantsList from './ParticipantsList';
+import type { SessionStatus, SessionArcher } from '@/types/database';
 import { formatDate, formatTime } from '@/lib/sessions/utils';
-import { QrCode, Users, Trophy, ChevronRight, ArrowLeft, Award } from 'lucide-react';
+import { QrCode, Trophy, ChevronRight, ArrowLeft, Award, Target, ArrowRight } from 'lucide-react';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -32,11 +34,14 @@ export default async function SessionPage({ params }: Props) {
     .eq('session_id', id)
     .order('joined_at', { ascending: true });
 
-  const archerList = (archers || []) as any[];
+  const archerList = (archers || []) as SessionArcher[];
   const archerCount = archerList.length;
   const totalArrows = s.ends_count * s.arrows_per_end;
   const { data: { user } } = await supabase.auth.getUser();
   const isOrganizer = user?.id === s.created_by;
+
+  // Check if the current user is a participating archer in this session
+  const currentArcher = user ? archerList.find((a) => a.user_id === user.id) : null;
 
   return (
     <main className="min-h-dvh pb-24">
@@ -59,6 +64,29 @@ export default async function SessionPage({ params }: Props) {
           </div>
           <Badge status={s.status as SessionStatus} />
         </div>
+
+        {/* Participant Scoring Action CTA */}
+        {currentArcher && s.status === 'live' && (
+          <Link
+            href={`/session/${id}/score?archer=${currentArcher.id}`}
+            className="block mb-6"
+          >
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-forest-600 to-forest-500 text-white shadow-xl shadow-forest-500/20 flex items-center justify-between hover:brightness-105 transition-all">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl">
+                  🎯
+                </div>
+                <div>
+                  <p className="font-bold text-base leading-tight">Sesi Sedang Berlangsung!</p>
+                  <p className="text-xs text-forest-100 mt-0.5">
+                    Isi markah sebagai <strong>{currentArcher.display_name}</strong>
+                  </p>
+                </div>
+              </div>
+              <ArrowRight size={20} className="text-forest-100" />
+            </div>
+          </Link>
+        )}
 
         {/* Session Info */}
         <Card className="mb-6">
@@ -88,6 +116,19 @@ export default async function SessionPage({ params }: Props) {
 
         {/* Quick Actions */}
         <div className="flex flex-col gap-2.5 mb-6">
+          {currentArcher && (
+            <Link
+              href={`/session/${id}/score?archer=${currentArcher.id}`}
+              className="flex items-center gap-3 p-4 rounded-xl bg-forest-500/10 border border-forest-500/20 hover:bg-forest-500/15 transition-colors"
+            >
+              <div className="w-10 h-10 rounded-xl bg-forest-500/20 flex items-center justify-center text-forest-400">
+                <Target size={20} />
+              </div>
+              <span className="flex-1 font-medium text-forest-300">Papan Skor Saya ({currentArcher.display_name})</span>
+              <ChevronRight size={16} className="text-forest-400/60" />
+            </Link>
+          )}
+
           <Link
             href={`/session/${id}/qr`}
             className="flex items-center gap-3 p-4 rounded-xl bg-surface border border-border-subtle hover:bg-surface-elevated transition-colors"
@@ -122,40 +163,8 @@ export default async function SessionPage({ params }: Props) {
           </Link>
         </div>
 
-        {/* Participants */}
-        <section className="mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <Users size={14} className="text-sand-300/40" />
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-sand-300/40">
-              Participants ({archerCount})
-            </h2>
-          </div>
-          {archerCount === 0 ? (
-            <Card className="text-center py-8">
-              <p className="text-sand-300/40 text-sm">No archers have joined yet</p>
-              <p className="text-sand-300/30 text-xs mt-1">Share the QR code to invite archers</p>
-            </Card>
-          ) : (
-            <div className="flex flex-col gap-1.5">
-              {archerList.map((archer: any) => (
-                <div
-                  key={archer.id}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-surface border border-border-subtle"
-                >
-                  <div className="w-8 h-8 rounded-full bg-charcoal-700 flex items-center justify-center text-xs font-bold text-sand-400">
-                    {archer.display_name.charAt(0).toUpperCase()}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-sand-100">{archer.display_name}</p>
-                    {archer.bow_type && (
-                      <p className="text-xs text-sand-300/40">{archer.bow_type}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+        {/* Live Participants */}
+        <ParticipantsList sessionId={id} initialArchers={archerList} />
 
         {/* Organizer Controls */}
         {isOrganizer && (
